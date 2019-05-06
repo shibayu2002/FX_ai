@@ -1,0 +1,10 @@
+crontab -u apl -l
+
+crontab -u apl -e
+------------------------------
+00 7 * * 1-5 /home/apl/batch/FX_ai/run_load_rate.sh
+30 7 * * 1-5 /home/apl/batch/FX_ai/run_fxai.sh
+------------------------------
+
+crontab -u apl -l
+

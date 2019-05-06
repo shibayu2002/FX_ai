@@ -1,0 +1,18 @@
+mysql -u xxxxxxx -D FXAI -p
+
+drop table FXRATE;
+
+create table FXRATE (
+  base_date char(8) NOT NULL,
+  code varchar(10) NOT NULL,
+  closing_price double NULL,
+  opening_price double NULL,
+  high_price double NULL,
+  low_price double NULL,
+  volume  double NULL,
+  day_before_diff double NULL,
+  day_before_ratio double NULL,
+  PRIMARY KEY(base_date, code)
+);
+
+select * from FXRATE;

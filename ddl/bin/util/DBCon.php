@@ -28,7 +28,6 @@ class DBCon {
   }
   
   public function query($sql) {
-    echo $sql . "\n";
     return $this -> con -> query($sql);
   }
 

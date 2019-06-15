@@ -1,6 +1,6 @@
-mysql -u xxxxxxx -p
+mysql -u root -p
 
 CREATE DATABASE FXAI CHARACTER SET utf8;
 SHOW CREATE DATABASE FXAI;
 
-GRANT ALL PRIVILEGES ON FXAI.* TO xxxxxxx@localhost;
+GRANT ALL PRIVILEGES ON FXAI.* TO apl@localhost;

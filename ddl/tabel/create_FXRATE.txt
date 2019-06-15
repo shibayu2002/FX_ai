@@ -1,4 +1,4 @@
-mysql -u xxxxxxx -D FXAI -p
+mysql -u apl -D FXAI -p
 
 drop table FXRATE;
 
@@ -10,9 +10,10 @@ create table FXRATE (
   high_price double NULL,
   low_price double NULL,
   volume  double NULL,
-  day_before_diff double NULL,
-  day_before_ratio double NULL,
   PRIMARY KEY(base_date, code)
 );
 
 select * from FXRATE;
+
+-- insert into FXRATE values ('20190101', 'USDJPY', 111.25, null, null, null, null, null, null);
+-- insert into FXRATE values ('20190507', 'USDJPY', 110.66, null, null, null, null, null, null);

@@ -71,7 +71,6 @@ class FXRateLoader {
       $curMonth->modify('-1 months');
     }
     print var_dump($rows);
-    return $rows;
   }
 
   private function loadByYahoo($code, $yearS, $monthS, $dayS, $yearE, $monthE, $dayE) {

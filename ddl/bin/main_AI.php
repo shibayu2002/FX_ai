@@ -12,24 +12,18 @@ main();
 
 function main() {
   global $argc, $argv;
-  if ($argc <= 4) {
-    echo "parameter 1:code 2:batch_date, 3:testCnt, 4:xCnt";
-    return;
-  }
-  
-  $code = $argv[1];
-  $batchDate = $argv[2];
+  $batchDate = $argv[1];
   if ($batchDate == 'TODAY') {
     $batchDate = date("Ymd");
   }
-  $testCnt = $argv[3];
-  $xCnt = $argv[4];
+  $testCnt = $argv[2];
+  $xCnt = $argv[3];
   
   system("rm -fr /home/apl/batch/FX_ai/ai/dataset/sub_dataset/*");
   
   try {
     // データ準備
-    createDataset($code, $batchDate, $testCnt, $xCnt);
+    createDataset($batchDate, $testCnt, $xCnt);
     
     // 学習開始
     system("python /usr/local/python/lib/python3.6/site-packages/nnabla/utils/cli/cli.py train -c /home/apl/batch/FX_ai/ai/net.nntxt -o /home/apl/batch/FX_ai/ai/workspace");
@@ -54,10 +48,10 @@ function normalization($expectDeff) {
   }
 }
 
-function createDataset($code, $batchDate, $TestCnt, $XCnt) {
+function createDataset($batchDate, $TestCnt, $XCnt) {
     // データ準備
     $dao = new FXRateDao();
-    $targets = $dao->select($batchDate, $code, $TestCnt + 2);
+    $targets = $dao->select($batchDate, 'USDJPY', $TestCnt + 2);
     $nextClosePrice = null;
     $nextBaseDate = null;
     $tranCsv = array();
@@ -81,18 +75,18 @@ function createDataset($code, $batchDate, $TestCnt, $XCnt) {
         $testCsv[] = "./sub_dataset/" . $batchDate . ".csv,0\n";
         file_put_contents("/home/apl/batch/FX_ai/ai/dataset/test.csv", $testCsv);
       }
-      makeSubDataset($code, $baseDate, $XCnt);
+      makeSubDataset($baseDate, $XCnt);
       $nextBaseDate = $baseDate;
       $nextClosePrice = $closingPrice;
     }
     
-    makeLastSubDataset($code, $batchDate, $XCnt);
+    makeLastSubDataset($batchDate, $XCnt);
     file_put_contents("/home/apl/batch/FX_ai/ai/dataset/tran.csv", $tranCsv);
 }
 
-function makeSubDataset($code, $baseDate, $XCnt) {
+function makeSubDataset($baseDate, $XCnt) {
   $dao = new FXRateDao();
-  $targets = $dao->select($baseDate, $code, $XCnt + 2);
+  $targets = $dao->select($baseDate, 'USDJPY', $XCnt + 2);
     $bFirst = true;
     $nextClosePrice = null;
     $subDatasetCsv = array();
@@ -115,9 +109,9 @@ function makeSubDataset($code, $baseDate, $XCnt) {
     file_put_contents("/home/apl/batch/FX_ai/ai/dataset/sub_dataset/" . $baseDate . ".csv", $subDatasetCsv);
 }
 
-function makeLastSubDataset($code, $baseDate, $XCnt) {
+function makeLastSubDataset($baseDate, $XCnt) {
   $dao = new FXRateDao();
-  $targets = $dao->select($baseDate, $code, $XCnt + 1);
+  $targets = $dao->select($baseDate, 'USDJPY', $XCnt + 1);
     $bFirst = true;
     $nextClosePrice = null;
     $subDatasetCsv = array();

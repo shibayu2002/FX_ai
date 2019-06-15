@@ -11,19 +11,48 @@ require(HOME_DIR . "dao/FXRateDao.php");
 main();
 
 function main() {
+  global $argc, $argv;
+
+  if ($argc <= 3) {
+    echo "parameter 1:code 2:batch_date, 3:term";
+    return;
+  }
+  $code = mb_strtoupper($argv[1]);
+  $batchDate = $argv[2];
+  if ($batchDate == 'TODAY') {
+    $batchDate = date("Ymd");
+  }
+  $term = $argv[3];
+
   try {
-    $loader = new FXRateLoader();
-    $rate = $loader->load("usdjpy");
-    
     $dao = new FXRateDao();
-    $rateBef = $dao->selectMostNear($rate);
+    $dao -> reflesh($code, $batchDate, $term);
+
+
+    // “–“ú‚ÌŽž‰¿‚ðŽb’è‚Å‘O“ú‚ÌI’l‚ÉÝ’è‚·‚é
+    loadAndSaveNearPrice($code);
+
+    $loader = new FXRateLoader();
+    $rows = $loader->loadTermAll($code, $batchDate, $term);
     
-    $rate['day_before_diff'] = $rate['closing_price'] - $rateBef['closing_price'];
-    $rate['day_before_ratio'] = ($rate['closing_price'] - $rateBef['closing_price']) / $rateBef['closing_price'];
-    
-    $dao->save($rate);
+    foreach ( $rows as $rate ) {
+      $dao->save($rate);
+    }
   } finally {
   }
+}
+
+function loadAndSaveNearPrice($code) {
+  $loader = new FXRateLoader();
+  $rate = $loader->loadNow($code);
+  $base_date = $rate["base_date"];
+  
+  $curDate = new DateTime(substr($base_date, 0, 4) . "-" .  substr($base_date, 4, 2) . "-" . substr($base_date, 6, 2));
+  $curDate->modify('-1 days');
+  $rate["base_date"] = $curDate->format('Y') . $curDate->format('m') . $curDate->format('d');
+  
+  $dao = new FXRateDao();
+  $dao->save($rate);
 }
 
 ?>

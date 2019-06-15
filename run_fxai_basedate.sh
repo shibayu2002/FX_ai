@@ -1,1 +1,1 @@
-php bin/main_AI.php $1 30 30 &
+php bin/main_AI.php $1 30 30

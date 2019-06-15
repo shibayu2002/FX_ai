@@ -1,0 +1,15 @@
+mysql -u apl -D FXAI -p
+
+drop table FXINDEX;
+
+create table FXINDEX (
+  base_date varchar(10) NOT NULL,
+  base_month char(8) NOT NULL,
+  cuntry varchar(50) NOT NULL,
+  title_no varchar(200) NULL,
+  title varchar(200) NOT NULL,
+  value double NULL,
+  PRIMARY KEY(base_date, cuntry, title)
+);
+
+select * from FXINDEX;

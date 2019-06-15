@@ -1,0 +1,17 @@
+mysql -u apl -D FXAI -p
+
+drop table RESULT;
+
+create table RESULT (
+  model varchar(20) NOT NULL,
+  base_date char(8) NOT NULL,
+  code varchar(10) NOT NULL,
+  tran_error double NOT NULL,
+  expected double NULL,
+  actual double NULL,
+  hit varchar(10) NULL,
+  memo varchar(100) NULL,
+  PRIMARY KEY(model, base_date, code)
+);
+
+select * from RESULT;
